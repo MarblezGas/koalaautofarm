@@ -57,7 +57,7 @@ local function getSpill()
                 if not humanoidRootPart then
                     error("Failed to access HumanoidRootPart")
                 end
-                local mag = (humanoidRootPart.Position - v.Position).magnitude
+                local mag = math.abs(humanoidRootPart.Position.Y - v.Position.Y)
                 if mag < dist then 
                     dist = mag 
                     thing = v 
@@ -65,23 +65,9 @@ local function getSpill()
             end
         end
     end
-    if not thing then
-        error("Failed to find a spill")
-    end
     return thing
 end
 
-
-
-
-local function disableSitting()
-    for _, obj in ipairs(game:GetService("Workspace"):GetDescendants()) do
-        if obj:IsA("Seat") or obj:IsA("VehicleSeat") then
-            obj.CanCollide = false
-            obj.Anchored = true
-        end
-    end
-end
 
 local function noclip()
     for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
@@ -110,8 +96,6 @@ local function moveTo(obj, speed)
 end
 
 
-disableSitting()
-
 local lastSpill = nil
 local isMoving = false
 local canMove = true
@@ -120,8 +104,9 @@ CleaningEvent.OnClientEvent:Connect(function(spillObj)
     if spillObj and spillObj.Parent and spillObj.Parent.Name == "Spills" and spillObj.Name == "Spill" then
         if lastSpill == spillObj then
             lastSpill = nil
+            canMove = true
         end
-        canMove = false  -- add this line to reset canMove to false
+        canMove = false
     end
 end)
 
@@ -161,14 +146,6 @@ while true do
     
     wait(0.1)
 end
-
-
-CleaningEvent:FireServer(lastSpill)
-
-if lastSpill then
-    lp.Character.HumanoidRootPart.CFrame = lastSpill.CFrame + Vector3.new(0, 5, 0)
-end
-
 
 
 CleaningEvent:FireServer(lastSpill)
