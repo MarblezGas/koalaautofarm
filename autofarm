@@ -134,6 +134,11 @@ while true do
             local offset = Vector3.new(0, currentSpill.Size.Y / 50, 0) -- adjust offset
             moveTo(lastSpill.CFrame + offset, 100)
         else
+            -- set default tween object here
+            local defaultTweenObject = game:GetService("Workspace").Loadables.Downstairs.Part
+            local offset = Vector3.new(0, defaultTweenObject.Size.Y / 50, 0) -- adjust offset
+            moveTo(defaultTweenObject.CFrame + offset, 100)
+            lastSpill = nil
         end
     end
     
