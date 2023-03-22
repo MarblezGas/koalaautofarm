@@ -1,11 +1,6 @@
 local lp = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CleaningEvent = ReplicatedStorage.MoppingRemote
-local UserInputService = game:GetService("UserInputService")
-
-
 
 for _,part in pairs(game.Workspace:GetDescendants()) do
     if part:IsA("BasePart") and (part.Name == "BenchSeat" or part.Name == "Seat" or part.Name == "PrioritySeat" or part.Name == "BackSeats") then
@@ -57,7 +52,7 @@ local function getSpill()
                 if not humanoidRootPart then
                     error("Failed to access HumanoidRootPart")
                 end
-                local mag = math.abs(humanoidRootPart.Position.Y - v.Position.Y)
+                local mag = (humanoidRootPart.Position - v.Position).magnitude
                 if mag < dist then 
                     dist = mag 
                     thing = v 
@@ -65,91 +60,16 @@ local function getSpill()
             end
         end
     end
+    if not thing then
+        error("Failed to find a spill")
+    end
     return thing
 end
 
-
-local function noclip()
-    for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-        if v:IsA("BasePart") and v.CanCollide == true then
-            v.CanCollide = false
-            game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-        end
-    end
-end
-
-local function moveTo(obj, speed)
-    local humanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
-    local info = TweenInfo.new(((humanoidRootPart.Position - obj.Position).Magnitude) / speed, Enum.EasingStyle.Linear)
-    local tween = TweenService:Create(humanoidRootPart, info, {CFrame = obj})
-
-    local antiFall = Instance.new("BodyVelocity", humanoidRootPart)
-    antiFall.Velocity = Vector3.new(0, 0, 0)
-
-    local noClipConnection = RunService.Stepped:Connect(noclip)
-    tween:Play()
-    
-    tween.Completed:Wait() -- wait for the tween to complete before allowing movement again
-    
-    antiFall:Destroy()
-    noClipConnection:Disconnect()
-end
-
-
-local lastSpill = nil
-local isMoving = false
-local canMove = true
-
-CleaningEvent.OnClientEvent:Connect(function(spillObj)
-    if spillObj and spillObj.Parent and spillObj.Parent.Name == "Spills" and spillObj.Name == "Spill" then
-        if lastSpill == spillObj then
-            lastSpill = nil
-            canMove = true
-        end
-        canMove = false
-    end
-end)
-
-
 while true do
     local currentSpill = getSpill()
-    if currentSpill ~= lastSpill then
-        if currentSpill then
-            lastSpill = currentSpill
-            local offset = Vector3.new(0, currentSpill.Size.Y / 50, 0) -- adjust offset
-            moveTo(lastSpill.CFrame + offset, 100)
-        else
-            -- set default tween object here
-            local defaultTweenObject = game:GetService("Workspace").Loadables.Downstairs.Part
-            local offset = Vector3.new(0, defaultTweenObject.Size.Y / 50, 0) -- adjust offset
-            moveTo(defaultTweenObject.CFrame + offset, 100)
-            lastSpill = nil
-        end
+    if currentSpill then
+        lp.Character.HumanoidRootPart.CFrame = currentSpill.CFrame
     end
-    
-    if lastSpill and not lastSpill:IsDescendantOf(game:GetService("Workspace").SpillAssets.Spills) then
-        lastSpill = nil
-        canMove = true
-    end
-    
-    if lastSpill and lastSpill.Parent and lastSpill.Parent.Name == "Spills" and lastSpill.Name == "Spill" then
-        local humanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
-        local mag = (humanoidRootPart.Position - lastSpill.Position).Magnitude
-        if mag > 3 then -- modify the threshold to adjust distance to spill
-            canMove = false
-            local offset = Vector3.new(0, lastSpill.Size.Y / 5, 0) -- adjust offset
-            moveTo(lastSpill.CFrame + offset, 100)
-        else
-            canMove = true
-        end
-    end
-    
-    wait(0.1)
-end
-
-
-CleaningEvent:FireServer(lastSpill)
-
-if lastSpill then
-    lp.Character.HumanoidRootPart.CFrame = lastSpill.CFrame + Vector3.new(0, 5, 0)
+    wait(0.5)
 end
