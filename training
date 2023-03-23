@@ -1,0 +1,81 @@
+while task.wait () do
+local args = {
+   [1] = {
+       ["Answer"] = 1,
+       ["CurrentRank"] = 1,
+       ["Question"] = 1
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 2,
+       ["CurrentRank"] = 1,
+       ["Question"] = 2
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 3,
+       ["CurrentRank"] = 2,
+       ["Question"] = 3
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 4,
+       ["CurrentRank"] = 1,
+       ["Question"] = 4
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 5,
+       ["CurrentRank"] = 1,
+       ["Question"] = 5
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 6,
+       ["CurrentRank"] = 1,
+       ["Question"] = 6
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 7,
+       ["CurrentRank"] = 1,
+       ["Question"] = 7
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+
+local args = {
+   [1] = {
+       ["Answer"] = 8,
+       ["CurrentRank"] = 1,
+       ["Question"] = 8
+   }
+}
+
+game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
+end
