@@ -78,6 +78,6 @@ local args = {
 }
 
 game:GetService("ReplicatedStorage").CheckAnswers:InvokeServer(unpack(args))
-wait(3)
-game.Players.LocalPlayer:Kick("Should be ranked | AT0M HUB")
+wait(10)
+game.Players.LocalPlayer:Kick("Should be ranked. | AT0M HUB")
 end
